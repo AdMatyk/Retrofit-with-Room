@@ -24,13 +24,10 @@ class UserActivity: AppCompatActivity() {
                 userList = db.userDao().getItems()
             }
             runOnUiThread {
-                Log.i("mes", userList[0].id.toString())
                 val adapter = MainAdapter(this,userList)
-
                 binding.lifecycleOwner = this
-
                 binding.listView.adapter = adapter
-                binding.listView.setOnItemClickListener{parent, view, position, id ->
+                binding.listView.setOnItemClickListener{ _, _, position, _ ->
                     val intent = Intent(this, PostTodosActivity::class.java)
                     intent.putExtra("id", position)
                     startActivity(intent)

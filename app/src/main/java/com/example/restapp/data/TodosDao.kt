@@ -11,10 +11,10 @@ interface TodosDao {
     fun getItems(id: Int): List<Todos>
 
     @Query("SELECT * FROM Todos WHERE id = :id")
-    fun getItem(id: Int): Todos
+    suspend fun getItem(id: Int): Todos
 
-    // Specify the conflict strategy as IGNORE, when the user tries to add an
-    // existing Item into the database Room ignores the conflict.
+    @Query("DELETE FROM TODOS")
+    suspend fun deleteItems()
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(todos: Todos)
 

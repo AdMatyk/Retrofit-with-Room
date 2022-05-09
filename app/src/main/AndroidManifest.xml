@@ -24,13 +24,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".UserActivity"
+            android:label="Users"
             android:exported="true">
         </activity>
         <activity android:name=".PostTodosActivity"
+            android:label="Posts &amp; ToDo's"
+            android:parentActivityName=".UserActivity"
             android:exported="true">
 
         </activity>
         <activity android:name=".CommentActivity"
+            android:label="Comments"
             android:exported="true">
 
         </activity>

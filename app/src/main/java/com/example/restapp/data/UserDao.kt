@@ -11,16 +11,14 @@ interface UserDao {
     fun getItems(): List<User>
 
     @Query("SELECT * FROM USER WHERE id = :id")
-    fun getItem(id: Int): User
+    suspend fun getItem(id: Int): User
+    @Query("DELETE FROM USER")
+    suspend fun deleteItems()
 
-    // Specify the conflict strategy as IGNORE, when the user tries to add an
-    // existing Item into the database Room ignores the conflict.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: User)
-
     @Update
     suspend fun update(item: User)
-
     @Delete
     suspend fun delete(item: User)
 }

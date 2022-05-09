@@ -10,7 +10,10 @@ interface CommentDao {
     fun getItems(id: Int): List<Comment>
 
     @Query("SELECT * FROM Comment WHERE id = :id")
-    fun getItem(id: Int): Comment
+    suspend fun getItem(id: Int): Comment
+
+    @Query("DELETE FROM COMMENT")
+    suspend fun deleteItems()
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.

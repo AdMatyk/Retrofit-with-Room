@@ -10,7 +10,10 @@ interface PostDao {
     fun getItems(id: Int): List<Post>
 
     @Query("SELECT * FROM Post WHERE id = :id")
-    fun getItem(id: Int): Post
+    suspend fun getItem(id: Int): Post
+
+    @Query("DELETE FROM POST")
+    suspend fun deleteItems()
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.

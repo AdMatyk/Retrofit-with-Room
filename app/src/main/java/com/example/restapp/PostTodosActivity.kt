@@ -29,6 +29,7 @@ class PostTodosActivity: AppCompatActivity()  {
             val todosDb = TodosDatabase.getDatabase(this)
             val binding = ActivityPostTodosBinding.inflate(layoutInflater)
             val thread = Thread(){
+
                 run{
                     postList = postDb.postDao().getItems(id + 1)
                     todosList = todosDb.todosDao().getItems(id + 1)

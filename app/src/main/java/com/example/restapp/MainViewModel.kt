@@ -2,59 +2,53 @@ package com.example.restapp
 
 
 import android.util.Log
-import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.launch
-import androidx.lifecycle.ViewModel.*
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.restapp.data.CommentDao
 import com.example.restapp.data.PostDao
 import com.example.restapp.data.TodosDao
 import com.example.restapp.data.UserDao
 import com.example.restapp.network.*
+import kotlinx.coroutines.launch
 
 
 class MainViewModel(private val userDao: UserDao, private val postDao: PostDao, private val todosDao: TodosDao, private val commentDao: CommentDao) : ViewModel() {
     var done = false
+    private val users = mutableListOf<User>()
+    private val comments = mutableListOf<Comment>()
+    private val posts = mutableListOf<Post>()
+    val todos = mutableListOf<Todos>()
 
-    fun getData() {
-        viewModelScope.launch {
+    suspend fun getData() {
             try {
-                    insertTodos()
-                    insertPosts()
-                    insertUsers()
-                    insertComments()
+                viewModelScope.launch {
+                    users.addAll(Api.retrofitService.getUsers())
 
-            } catch (e: Exception) {
+                    posts.addAll(Api.retrofitService.getPosts())
+
+                    todos.addAll(Api.retrofitService.getTodos())
+
+                    comments.addAll(Api.retrofitService.getComments())
+                }
+
+            }
+                catch(e: Exception) {
                 Log.i("mes", e.message!!)
             }
-
-        }
-        done = true
-
-
     }
+    suspend fun insertData() {
+        viewModelScope.launch {
+            userDao.deleteItems()
+            for (i in users) userDao.insert(i)
+            postDao.deleteItems()
+            for (i in posts) postDao.insert(i)
+            todosDao.deleteItems()
+            for (i in todos) todosDao.insert(i)
+            commentDao.deleteItems()
+            for (i in comments) commentDao.insert(i)
+        }
 
-    private fun insertUsers() {
-        viewModelScope.launch {
-            for (i in Api.retrofitService.getUsers()) userDao.insert(i)
-        }
-    }
-    private fun insertPosts() {
-        viewModelScope.launch {
-            for (i in Api.retrofitService.getPosts()) postDao.insert(i)
-        }
-    }
-    private fun insertTodos() {
-        viewModelScope.launch {
-            for (i in Api.retrofitService.getTodos()) todosDao.insert(i)
-
-        }
-    }
-    private fun insertComments() {
-        viewModelScope.launch {
-            for (i in Api.retrofitService.getComments()) commentDao.insert(i)
-
-        }
     }
 
 
@@ -69,10 +63,6 @@ class MainViewModel(private val userDao: UserDao, private val postDao: PostDao, 
         }
     }
 }
-
-/**
- * Factory class to instantiate the [ViewModel] instance.
- */
 
 
 
